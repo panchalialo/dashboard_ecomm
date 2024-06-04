@@ -5,7 +5,6 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
 
 const NavBar = () => {
   const auth = localStorage.getItem("users");
@@ -18,11 +17,7 @@ const NavBar = () => {
 
   return (
     <>
-      <Navbar
-        expand="lg"
-        className="bg-body-tertiary"
-        data-bs-theme="dark"
-      >
+      <Navbar expand="lg" className="bg-body-tertiary" data-bs-theme="dark">
         <Container fluid>
           <Navbar.Brand as={Link} to="/" className="text-primary">
             E-Dashboard
@@ -42,7 +37,7 @@ const NavBar = () => {
                   <Nav.Link as={Link} to="/products">
                     Products
                   </Nav.Link>
-                  <NavDropdown
+                  {/* <NavDropdown
                     title="Product Config"
                     id="navbarScrollingDropdown"
                   >
@@ -53,7 +48,7 @@ const NavBar = () => {
                     <NavDropdown.Item as={Link} to="/update-product">
                       Update Products
                     </NavDropdown.Item>
-                  </NavDropdown>
+                  </NavDropdown> */}
                   <Nav.Link as={Link} to="/profile">
                     My Profile [{JSON.parse(auth).name}]
                   </Nav.Link>
@@ -61,41 +56,44 @@ const NavBar = () => {
               )}
             </Nav>
             <Form className="d-flex">
-            {auth ? (<>
-              <Form.Control
-                type="search"
-                placeholder="Search"
-                className="me-2"
-                aria-label="Search"
-              />
-              <Button variant="outline-primary" className="mx-1">
-                Search
-              </Button>
-             
-                <Button
-                  variant="outline-primary"
-                  className="mx-1"
-                  onClick={logoutHandler}
-                >
-                  Logout
-                </Button></>
-              ) : (<>
-              <Button
-                  variant="outline-primary"
-                  className="mx-1"
-                  as={Link}
-                  to="/login"
-                >
-                  Sign In
-                </Button>
-                <Button
-                  variant="outline-primary"
-                  className="mx-1"
-                  as={Link}
-                  to="/signup"
-                >
-                  Sign Up
-                </Button>
+              {auth ? (
+                <>
+                  <Form.Control
+                    type="search"
+                    placeholder="Search"
+                    className="me-2"
+                    aria-label="Search"
+                  />
+                  <Button variant="outline-primary" className="mx-1">
+                    Search
+                  </Button>
+
+                  <Button
+                    variant="outline-primary"
+                    className="mx-1"
+                    onClick={logoutHandler}
+                  >
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    variant="outline-primary"
+                    className="mx-1"
+                    as={Link}
+                    to="/login"
+                  >
+                    Sign In
+                  </Button>
+                  <Button
+                    variant="outline-primary"
+                    className="mx-1"
+                    as={Link}
+                    to="/signup"
+                  >
+                    Sign Up
+                  </Button>
                 </>
               )}
             </Form>

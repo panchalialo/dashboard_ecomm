@@ -1,5 +1,3 @@
-import react from "react";
-
 import NavBar from "./components/NavBar";
 import { Route, Routes } from "react-router-dom";
 import Home from "./components/Home";
@@ -13,6 +11,7 @@ import SignUp from "./components/SignUp";
 import Profile from "./components/Profile";
 import PrivateComponent from "./components/PrivateComponent";
 import LogIn from "./components/LogIn";
+import AddProduct from "./components/AddProduct";
 
 function App() {
   return (
@@ -24,15 +23,14 @@ function App() {
         <Route element={<PrivateComponent />}>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
-          <Route path="/add-product" element={<Products />} />
+          <Route path="/add-product" element={<AddProduct/>} />
           <Route path="/update-product" element={<Products />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
 
-
         {/*................... Public routes.................. */}
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<LogIn/>} />
+        <Route path="/login" element={<LogIn />} />
       </Routes>
       <Footer />
     </div>
