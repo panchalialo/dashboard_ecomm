@@ -3,31 +3,21 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/esm/Button";
+import { useNavigate } from "react-router-dom";
 
 
 const AddProduct = () => {
+  
   const [inputProductValue, setInputProductValue] = useState({
     name: " ",
     price: " ",
     brand: " ",
-    image: " ",
+    image: null,
   });
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
-  const addProducthandler = async (e) => {
-    e.preventDefault();
-    // const formData = new FormData();
-    // formData.append("file", inputProductValue)
 
-    let result = await fetch("http://localhost:5000/add-product", {
-      method: "post",
-      body: JSON.stringify(inputProductValue),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    result = await result.json();
-    console.log(result);
-  };
 
   const getProductInput = (e) => {
     setInputProductValue({
@@ -39,6 +29,34 @@ const AddProduct = () => {
   const getImageHandler = (e) => {
     setInputProductValue({ ...inputProductValue, image: e.target.files[0] });
   };
+
+  const addProducthandler = async (e) => {
+    e.preventDefault();
+    const data = new FormData();
+    data.append('file', inputProductValue.image);
+    data.append('productName', inputProductValue.name);
+    data.append('brand', inputProductValue.brand);
+    data.append('price', inputProductValue.price);
+
+    try {
+      const res = await fetch('http://localhost:5000/add-product', {
+        method: 'POST',
+        body: data
+      });
+
+      if (res.ok) {
+        setMessage('File Uploaded Successfully');
+        console.log( JSON.stringify(res.body))
+        navigate("/products")
+      } else {
+        setMessage('Error: File Upload Failed');
+      }
+    } catch (err) {
+      setMessage('Error: File Upload Failed');
+    }
+  };
+
+ 
   return (
     <>
       <div className="container ">
@@ -120,6 +138,7 @@ const AddProduct = () => {
                   </Button>
                 </div>
               </Form>
+              {message && <p>{message}</p>}
             </div>
           </div>
         </div>
