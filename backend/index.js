@@ -38,7 +38,7 @@ app.post("/login", async (req, res) => {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./public/images");
+    cb(null, "./images");
   },
   filename: (req, file, cb) => {
     cb(
@@ -48,35 +48,27 @@ const storage = multer.diskStorage({
   },
 });
 
-// const fileFilter = (req, file, cb) => {
-//   const allowedFileType = ["image/jpeg", "image/jpg", "image/png"];
-//   if (allowedFileType.includes(file.mimetype)) {
-//     cb(null, true);
-//   } else {
-//     cb(null, false);
-//   }
-// };
-
 const upload = multer({
-  storage: storage,
-  // fileFilter: fileFilter,
+  storage,
 });
 
-app.post("/add-product", upload.single("image"), async (req, res) => {
-  // const name = req.body.name;
-  // const price = req.body.price;
-  // const brand = req.body.brand;
-  // const image = req.file.fieldname;
+app.post("/add-product", upload.single("file"), async (req, res) => {
+  const { name, price, brand } = req.body;
+  const newProductData = new productData({
+    fileName: req.file.filename,
+    filePath: req.file.path,
+    name,
+    brand,
+    price,
+  });
 
-  // const newProductData = {
-  //   name, price, brand, image
-  // }
-
-  // let product = new productData(newProductData);
-  // let result = await product.save();
-  // res.send(result);
-  console.log(req.body);
-  console.log(req.file);
+  try {
+    await newProductData.save();
+    console.log(newProductData.filePath)
+    res.json({ message: "File uploaded successfully" });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to upload file" });
+  }
 });
 
 app.listen(5000, () => {
