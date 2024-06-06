@@ -64,12 +64,24 @@ app.post("/add-product", upload.single("file"), async (req, res) => {
 
   try {
     await newProductData.save();
-    console.log(newProductData.filePath)
+    console.log(newProductData.fileName)
     res.json({ message: "File uploaded successfully" });
   } catch (err) {
     res.status(500).json({ error: "Failed to upload file" });
   }
 });
+
+
+//show Products
+app.get("/products", async(req, res)=>{
+  let products = await productData.find();
+  if(productData.length>0){
+    res.send(products)
+  }else{
+    res.send("No product found")
+  }
+})
+
 
 app.listen(5000, () => {
   console.log("server is listening on 5000 port");

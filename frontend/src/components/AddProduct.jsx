@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-// import Col from "react-bootstrap/Col";
-// import Form from "react-bootstrap/Form";
-// import Row from "react-bootstrap/Row";
-// import Button from "react-bootstrap/esm/Button";
+
 import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
@@ -12,7 +9,9 @@ const AddProduct = () => {
     brand: " ",
     image: null,
   });
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("")
+  const [errMessage, setErrMessage] = useState(false);
+
   const navigate = useNavigate();
 
   const getProductInput = (e) => {
@@ -28,11 +27,25 @@ const AddProduct = () => {
 
   const addProducthandler = async (e) => {
     e.preventDefault();
+    if (
+      !inputProductValue.name ||
+      !inputProductValue.price ||
+      !inputProductValue.brand ||
+      !inputProductValue.image
+    ) {
+      setErrMessage(true);
+      return false;
+    }else {
+
+    
+
+    const userId = JSON.parse(localStorage.getItem("users")).email;
     const data = new FormData();
     data.append("file", inputProductValue.image);
     data.append("productName", inputProductValue.name);
     data.append("brand", inputProductValue.brand);
     data.append("price", inputProductValue.price);
+    data.append("userId", userId);
 
     try {
       const res = await fetch("http://localhost:5000/add-product", {
@@ -40,16 +53,19 @@ const AddProduct = () => {
         body: data,
       });
 
-      if (res.ok) {
+      if (res.ok && data) {
         setMessage("File Uploaded Successfully");
         console.log(JSON.stringify(res.body));
         navigate("/products");
       } else {
         setMessage("Error: File Upload Failed");
+        setErrMessage(true)
       }
     } catch (err) {
       setMessage("Error: File Upload Failed");
     }
+
+  }
   };
 
   return (
@@ -61,80 +77,6 @@ const AddProduct = () => {
           <div class=" card my-4 col-sm-12 col-lg-8 ">
             <h5 class="card-header text-primary ">Add Product</h5>
             <div class="card-body">
-              {/* <Form onSubmit={addProducthandler} encType="multipart/form-data">
-                <Form.Group
-                  as={Row}
-                  className="mb-3"
-                  controlId="formPlaintextEmail"
-                >
-                  <Form.Label column sm="2">
-                    Name
-                  </Form.Label>
-                  <Col sm="10">
-                    <Form.Control
-                      type="text"
-                      placeholder="Name"
-                      name="name"
-                      value={inputProductValue.name}
-                      onChange={getProductInput}
-                    />
-                  </Col>
-                </Form.Group>
-
-                <Form.Group
-                  as={Row}
-                  className="mb-3"
-                  controlId="formPlaintextPassword"
-                >
-                  <Form.Label column sm="2">
-                    Price
-                  </Form.Label>
-                  <Col sm="10">
-                    <Form.Control
-                      type="number"
-                      placeholder="Price"
-                      name="price"
-                      value={inputProductValue.price}
-                      onChange={getProductInput}
-                    />
-                  </Col>
-                </Form.Group>
-                <Form.Group
-                  as={Row}
-                  className="mb-3"
-                  controlId="formPlaintextPassword"
-                >
-                  <Form.Label column sm="2">
-                    Brand
-                  </Form.Label>
-                  <Col sm="10">
-                    <Form.Control
-                      type="text"
-                      placeholder="Brand"
-                      name="brand"
-                      value={inputProductValue.brand}
-                      onChange={getProductInput}
-                    />
-                  </Col>
-                </Form.Group>
-                
-                <Form.Group controlId="formFile" className="mb-3">
-                  <Form.Label>Upload Product Image</Form.Label>
-                  <Form.Control
-                    type="file"
-                    accept=".png, .jpg, .jpeg"
-                    name="image"
-                    onChange={getImageHandler}
-                  />
-                </Form.Group>
-
-                <div className="d-flex justify-content-center">
-                  <Button variant="primary" type="submit">
-                    Add Product
-                  </Button>
-                </div>
-              </Form> */}
-
               <form onSubmit={addProducthandler} encType="multipart/form-data">
                 <div class="grid gap-6 mb-6 md:grid-cols-2">
                   <div>
@@ -152,8 +94,9 @@ const AddProduct = () => {
                       id="first_name"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="name"
-                      required
+                      
                     />
+                    {errMessage && inputProductValue.name === " " && <span className="text-danger">Please enter name</span>}
                   </div>
 
                   <div>
@@ -173,6 +116,7 @@ const AddProduct = () => {
                       value={inputProductValue.price}
                       onChange={getProductInput}
                     />
+                    {errMessage && inputProductValue.price === " " && <span className="text-danger">Please enter price</span>}
                   </div>
                   <div>
                     <label
@@ -190,6 +134,7 @@ const AddProduct = () => {
                       value={inputProductValue.brand}
                       onChange={getProductInput}
                     />
+                    {errMessage && inputProductValue.brand === " " && <span className="text-danger">Please enter brand</span>}
                   </div>
                 </div>
                 <div class="mb-6">
@@ -207,6 +152,7 @@ const AddProduct = () => {
                     name="image"
                     onChange={getImageHandler}
                   />
+                  {errMessage && inputProductValue.image === null && <span className="text-danger">Please enter name</span>}
                 </div>
 
                 <button
