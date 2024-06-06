@@ -12,6 +12,7 @@ import Profile from "./components/Profile";
 import PrivateComponent from "./components/PrivateComponent";
 import LogIn from "./components/LogIn";
 import AddProduct from "./components/AddProduct";
+import "./index.css"
 
 function App() {
   return (
