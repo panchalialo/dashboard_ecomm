@@ -10,6 +10,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use("/uploads", express.static(path.join(__dirname, "images")));
 
 //Sign up
 app.post("/signup", async (req, res) => {
@@ -38,7 +39,7 @@ app.post("/login", async (req, res) => {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./images");
+    cb(null, "images/");
   },
   filename: (req, file, cb) => {
     cb(
@@ -53,35 +54,42 @@ const upload = multer({
 });
 
 app.post("/add-product", upload.single("file"), async (req, res) => {
-  const { name, price, brand } = req.body;
+  const { name, price, brand, userId } = req.body;
   const newProductData = new productData({
-    fileName: req.file.filename,
-    filePath: req.file.path,
+    imageUrl: `http://localhost:5000/uploads/${req.file.filename}`,
     name,
     brand,
     price,
+    userId,
   });
-
-  try {
-    await newProductData.save();
-    console.log(newProductData.fileName)
-    res.json({ message: "File uploaded successfully" });
-  } catch (err) {
+  if (newProductData) {
+    try {
+      await newProductData.save();
+      // console.log(newProductData.fileName);
+      res.send({ message: "File uploaded successfully" });
+    } catch (err) {
+      res.status(500).json({ error: "Failed to upload file" });
+    }
+  } else {
     res.status(500).json({ error: "Failed to upload file" });
   }
 });
 
-
 //show Products
-app.get("/products", async(req, res)=>{
+app.get("/products", async (req, res) => {
   let products = await productData.find();
-  if(productData.length>0){
-    res.send(products)
-  }else{
-    res.send("No product found")
+  if (productData.length > 0) {
+    res.json(products);
+  } else {
+    res.send("No product found");
   }
-})
+});
 
+//Delete Product
+app.delete("/products/:id", async (req, res) => {
+  const result = await productData.deleteOne({ _id: req.params.id });
+  res.send(result);
+});
 
 app.listen(5000, () => {
   console.log("server is listening on 5000 port");

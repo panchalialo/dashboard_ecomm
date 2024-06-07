@@ -9,10 +9,12 @@ const AddProduct = () => {
     brand: " ",
     image: null,
   });
-  const [message, setMessage] = useState("")
+  const [message, setMessage] = useState("");
   const [errMessage, setErrMessage] = useState(false);
 
   const navigate = useNavigate();
+
+  //input data onchange function
 
   const getProductInput = (e) => {
     setInputProductValue({
@@ -21,9 +23,13 @@ const AddProduct = () => {
     });
   };
 
+  //file input onchange function
+
   const getImageHandler = (e) => {
     setInputProductValue({ ...inputProductValue, image: e.target.files[0] });
   };
+
+  //product add function
 
   const addProducthandler = async (e) => {
     e.preventDefault();
@@ -35,37 +41,34 @@ const AddProduct = () => {
     ) {
       setErrMessage(true);
       return false;
-    }else {
+    } else {
+      const userId = JSON.parse(localStorage.getItem("users"))._id;
+      const data = new FormData();
+      data.append("file", inputProductValue.image);
+      data.append("name", inputProductValue.name);
+      data.append("brand", inputProductValue.brand);
+      data.append("price", inputProductValue.price);
+      data.append("userId", userId);
 
-    
+      try {
+        const res = await fetch("http://localhost:5000/add-product", {
+          method: "POST",
+          body: data,
+          
+        });
 
-    const userId = JSON.parse(localStorage.getItem("users")).email;
-    const data = new FormData();
-    data.append("file", inputProductValue.image);
-    data.append("productName", inputProductValue.name);
-    data.append("brand", inputProductValue.brand);
-    data.append("price", inputProductValue.price);
-    data.append("userId", userId);
-
-    try {
-      const res = await fetch("http://localhost:5000/add-product", {
-        method: "POST",
-        body: data,
-      });
-
-      if (res.ok && data) {
-        setMessage("File Uploaded Successfully");
-        console.log(JSON.stringify(res.body));
-        navigate("/products");
-      } else {
+        if (res.ok && data) {
+          setMessage("File Uploaded Successfully");
+          console.log(JSON.stringify(res.body, data));
+          navigate("/products");
+        } else {
+          setMessage("Error: File Upload Failed");
+          setErrMessage(true);
+        }
+      } catch (err) {
         setMessage("Error: File Upload Failed");
-        setErrMessage(true)
       }
-    } catch (err) {
-      setMessage("Error: File Upload Failed");
     }
-
-  }
   };
 
   return (
@@ -84,7 +87,7 @@ const AddProduct = () => {
                       for="first_name"
                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >
-                      name
+                      Name
                     </label>
                     <input
                       type="text"
@@ -94,9 +97,10 @@ const AddProduct = () => {
                       id="first_name"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="name"
-                      
                     />
-                    {errMessage && inputProductValue.name === " " && <span className="text-danger">Please enter name</span>}
+                    {errMessage && inputProductValue.name === " " && (
+                      <span className="text-danger">Please enter name</span>
+                    )}
                   </div>
 
                   <div>
@@ -116,7 +120,9 @@ const AddProduct = () => {
                       value={inputProductValue.price}
                       onChange={getProductInput}
                     />
-                    {errMessage && inputProductValue.price === " " && <span className="text-danger">Please enter price</span>}
+                    {errMessage && inputProductValue.price === " " && (
+                      <span className="text-danger">Please enter price</span>
+                    )}
                   </div>
                   <div>
                     <label
@@ -134,7 +140,9 @@ const AddProduct = () => {
                       value={inputProductValue.brand}
                       onChange={getProductInput}
                     />
-                    {errMessage && inputProductValue.brand === " " && <span className="text-danger">Please enter brand</span>}
+                    {errMessage && inputProductValue.brand === " " && (
+                      <span className="text-danger">Please enter brand</span>
+                    )}
                   </div>
                 </div>
                 <div class="mb-6">
@@ -152,7 +160,9 @@ const AddProduct = () => {
                     name="image"
                     onChange={getImageHandler}
                   />
-                  {errMessage && inputProductValue.image === null && <span className="text-danger">Please enter name</span>}
+                  {errMessage && inputProductValue.image === null && (
+                    <span className="text-danger">Please upload file</span>
+                  )}
                 </div>
 
                 <button
