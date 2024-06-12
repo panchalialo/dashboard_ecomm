@@ -1,7 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const ProductCard = (props) => {
-
+const navigate = useNavigate()
     const deleteProductHandler = async(id) =>{
         let result = await fetch(`http://localhost:5000/products/${props.id}`, {
             method:"DELETE"
@@ -13,6 +14,10 @@ const ProductCard = (props) => {
             props.fetchProducts(    )
         }
 
+    }
+
+    const editProductHandler = () =>{
+        navigate(`/update-product/${props.id}`)
     }
 
   return (
@@ -113,6 +118,7 @@ const ProductCard = (props) => {
             <button
               type="button"
               class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
+              onClick={()=>editProductHandler(props.id)}
             >
               <svg
                 class="w-6 h-6 text-blue-800 dark:text-white"

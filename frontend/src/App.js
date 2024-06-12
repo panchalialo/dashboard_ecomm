@@ -13,6 +13,7 @@ import PrivateComponent from "./components/PrivateComponent";
 import LogIn from "./components/LogIn";
 import AddProduct from "./components/AddProduct";
 import "./index.css"
+import EditProduct from "./components/EditProduct";
 
 function App() {
   return (
@@ -25,7 +26,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
           <Route path="/add-product" element={<AddProduct/>} />
-          <Route path="/update-product" element={<Products />} />
+          <Route path="/update-product/:id" element={<EditProduct/>} />
           <Route path="/profile" element={<Profile />} />
         </Route>
 

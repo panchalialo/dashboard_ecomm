@@ -17,10 +17,7 @@ const Products = () => {
     result = await result.json();
 
     setProductList(result);
-    console.log(result[0].imageUrl)
   };
-// console.log(productList[0].filePath)
-  
 
   //add product button function
   const addProductHandler = () => {
@@ -45,15 +42,22 @@ const Products = () => {
         </div>
 
         <div className="container">
-          
-          
-            <div className="row">
+          <div className="row">
             {productList.map((items) => {
               return (
                 <>
-                <div className="col-lg-4 col-md-6 col-sm-12 text-center mb-5" key={items._id}>
-                 
-                  <ProductCard name={items.name} price={items.price} image={items?.imageUrl} brand= {items.brand} id={items._id} fetchProducts ={fetchProducts}/>
+                  <div
+                    className="col-lg-4 col-md-6 col-sm-12 text-center mb-5"
+                    key={items._id}
+                  >
+                    <ProductCard
+                      name={items.name}
+                      price={items.price}
+                      image={items?.imageUrl}
+                      brand={items.brand}
+                      id={items._id}
+                      fetchProducts={fetchProducts}
+                    />
                   </div>
                 </>
               );

@@ -91,6 +91,30 @@ app.delete("/products/:id", async (req, res) => {
   res.send(result);
 });
 
+//Edit Products
+app.get("/products/:id", async (req, res) => {
+  let result = await productData.findOne({ _id: req.params.id });
+  if (result) {
+    res.send(result);
+  } else {
+    res.send({ result: "No product found" });
+  }
+});
+
+//update Product
+app.put("/products/:id", async (req, res) => {
+  let result = await productData.updateOne(
+    { _id: req.params.id },
+    { $set: req.body }
+  );
+  res.send(result);
+});
+
+
+
+
+
+//listening port
 app.listen(5000, () => {
   console.log("server is listening on 5000 port");
 });
