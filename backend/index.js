@@ -110,9 +110,19 @@ app.put("/products/:id", async (req, res) => {
   res.send(result);
 });
 
+//Search Product
+app.get("/search/:key", async (req, res) => {
+  let result = await productData.find({
+    "$or": [
+      { name: { $regex: req.params.key } },
+      { brand: { $regex: req.params.key } },
+      
 
+    ],
+  });
 
-
+  res.send(result);
+});
 
 //listening port
 app.listen(5000, () => {

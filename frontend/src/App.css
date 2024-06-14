@@ -56,3 +56,10 @@ input[type=number] {
 .update-img{
   width: 100px;
 }
+
+.section-main-banner {
+  background-color: aqua;
+  height: 300px;
+  width: 100%;
+  background-image: url('../src/assets/images/banner-1.jpg');
+}

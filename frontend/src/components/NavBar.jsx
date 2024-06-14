@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -7,17 +7,21 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 
 const NavBar = () => {
+
   const auth = localStorage.getItem("users");
   const navigate = useNavigate();
 
+  
   const logoutHandler = () => {
     localStorage.removeItem("users");
     navigate("/login");
   };
+ 
+  
 
   return (
     <>
-      <Navbar expand="lg" className="bg-body-tertiary" data-bs-theme="dark">
+      <Navbar expand="lg" className="bg-body-tertiary position-fixed top-0 w-100" data-bs-theme="dark" style={{zIndex:"999"}}>
         <Container fluid>
           <Navbar.Brand as={Link} to="/" className="text-primary">
             E-Dashboard
@@ -58,15 +62,10 @@ const NavBar = () => {
             <Form className="d-flex">
               {auth ? (
                 <>
-                  <Form.Control
-                    type="search"
-                    placeholder="Search"
-                    className="me-2"
-                    aria-label="Search"
-                  />
-                  <Button variant="outline-primary" className="mx-1">
+                 
+                  {/* <Button variant="outline-primary" className="mx-1">
                     Search
-                  </Button>
+                  </Button> */}
 
                   <Button
                     variant="outline-primary"

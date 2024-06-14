@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ProductCard from "./ProductCard";
+import Form from "react-bootstrap/Form";
 
 const Products = () => {
   const [productList, setProductList] = useState([]);
+  const [addProductShow, setAddProductShow] = useState(false);
+
   const navigate = useNavigate();
+  const location = useLocation()
 
   //render product list on load
   useEffect(() => {
     fetchProducts();
-  }, [setProductList]);
+    if(location.pathname === "/products"){
+      setAddProductShow(true)
+    }
+  }, [setProductList, location.pathname]);
 
   //fetch products from db
   const fetchProducts = async () => {
@@ -23,6 +30,24 @@ const Products = () => {
   const addProductHandler = () => {
     navigate("/add-product");
   };
+
+
+  //search product
+  const searchInputHandler = async (e) => {
+    let key = e.target.value
+    // console.log(e.target.value)
+    if(key){
+    let result = await fetch(`http://localhost:5000/search/${key}`);
+    result = await result.json()
+    if(result){
+      setProductList(result)
+    }}else{
+      fetchProducts()
+    }
+  }
+
+
+
   return (
     <>
       <div className="container my-4">
@@ -31,13 +56,31 @@ const Products = () => {
             <h2>All Products</h2>
           </div>
           <div className="col-md-6 d-flex justify-content-end">
-            <button
+         { addProductShow ?<> <button
               type="button"
               className="btn btn-outline-primary btn-sm"
               onClick={addProductHandler}
             >
               + Add Product
             </button>
+            <Form.Control
+                    type="search"
+                    placeholder="Search"
+                    className="me-2"
+                    aria-label="Search"
+                    onChange={searchInputHandler}
+                  />
+            </>: <>
+            
+            <Form.Control
+                    type="search"
+                    placeholder="Search"
+                    className="me-2"
+                    aria-label="Search"
+                    onChange={searchInputHandler}
+                  />
+            </>
+            }
           </div>
         </div>
 

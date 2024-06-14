@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { json, useNavigate, useParams } from "react-router-dom";
 
 const EditProduct = () => {
   const [inputProductValue, setInputProductValue] = useState({
@@ -10,13 +10,15 @@ const EditProduct = () => {
   });
   const params = useParams();
 
-  const [message, setMessage] = useState("");
-  const [errMessage, setErrMessage] = useState(false);
 
-  // const navigate = useNavigate();
+
+//   const [message, setMessage] = useState("");
+//   const [errMessage, setErrMessage] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    updateProducthandler();
+    getProducthandler();
   }, []);
 
   //input data onchange function
@@ -39,11 +41,26 @@ const EditProduct = () => {
   //   console.log('image', objectUrl)
 
   //product edit function
-  const updateProducthandler = async (e) => {
+  const getProducthandler = async (e) => {
     let result = await fetch(`http://localhost:5000/products/${params.id}`);
     result = await result.json();
-    console.log(result);
+    // console.log(result);
     setInputProductValue({ ...result, image: result.imageUrl });
+  };
+
+  const updateProducthandler = async (e) => {
+    e.preventDefault();
+    
+    let result = await fetch(`http://localhost:5000/products/${params.id}`, {
+      method: "put",
+      body: JSON.stringify(inputProductValue),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    result =  await result.json();
+    console.log(result)
+    navigate("/products")
   };
 
   return (
@@ -77,9 +94,9 @@ const EditProduct = () => {
                       placeholder="name"
                       required
                     />
-                    {errMessage && inputProductValue.name === " " && (
-                        <span className="text-danger">Please enter name</span>
-                      )}
+                    {/* {errMessage && inputProductValue.name === " " && (
+                      <span className="text-danger">Please enter name</span>
+                    )} */}
                   </div>
 
                   <div>
@@ -99,9 +116,9 @@ const EditProduct = () => {
                       value={inputProductValue.price}
                       onChange={getProductInput}
                     />
-                    {errMessage && inputProductValue.price === " " && (
-                        <span className="text-danger">Please enter price</span>
-                      )}
+                    {/* {errMessage && inputProductValue.price === " " && (
+                      <span className="text-danger">Please enter price</span>
+                    )} */}
                   </div>
                   <div>
                     <label
@@ -119,9 +136,9 @@ const EditProduct = () => {
                       value={inputProductValue.brand}
                       onChange={getProductInput}
                     />
-                    {errMessage && inputProductValue.brand === " " && (
-                        <span className="text-danger">Please enter brand</span>
-                      )}
+                    {/* {errMessage && inputProductValue.brand === " " && (
+                      <span className="text-danger">Please enter brand</span>
+                    )} */}
                   </div>
                 </div>
                 <div class="mb-6">
@@ -145,9 +162,9 @@ const EditProduct = () => {
                     alt=""
                     className="update-img"
                   />
-                  {errMessage && inputProductValue.image === null && (
-                      <span className="text-danger">Please upload file</span>
-                    )}
+                  {/* {errMessage && inputProductValue.image === null && (
+                    <span className="text-danger">Please upload file</span>
+                  )} */}
                 </div>
 
                 <button
@@ -158,7 +175,7 @@ const EditProduct = () => {
                 </button>
               </form>
 
-              {message && <p>{message}</p>}
+              {/* {message && <p>{message}</p>} */}
             </div>
           </div>
         </div>
