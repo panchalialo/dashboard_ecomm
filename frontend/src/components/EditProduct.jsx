@@ -6,7 +6,7 @@ const EditProduct = () => {
     name: " ",
     price: " ",
     brand: " ",
-    image: "product",
+    image: null,
   });
   const params = useParams();
 
@@ -50,17 +50,25 @@ const EditProduct = () => {
 
   const updateProducthandler = async (e) => {
     e.preventDefault();
+    const data = new FormData();
+      data.append("file", inputProductValue.image);
+      data.append("name", inputProductValue.name);
+      data.append("brand", inputProductValue.brand);
+      data.append("price", inputProductValue.price);
+     
     
     let result = await fetch(`http://localhost:5000/products/${params.id}`, {
       method: "put",
-      body: JSON.stringify(inputProductValue),
+      body: data,
       headers: {
         "Content-Type": "application/json",
       },
     });
-    result =  await result.json();
+    
+   if(result.ok){
     console.log(result)
     navigate("/products")
+   }
   };
 
   return (

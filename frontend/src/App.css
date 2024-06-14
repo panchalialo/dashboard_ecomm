@@ -81,3 +81,17 @@ background: rgb(243, 243, 243);
     font-size: 75px;
     text-transform: capitalize;
     }
+
+
+/* dashboard banner ..................*/
+  .dashboard-banner .carousel-control-prev{
+    display: none;
+  }
+  .dashboard-banner .carousel-control-next{
+    display: none;
+  }
+
+  .dashboard-banner .banner-img{
+    filter: brightness(0.5);
+  }
+  

@@ -14,28 +14,36 @@ app.use(express.json());
 app.use(cors());
 app.use("/uploads", express.static(path.join(__dirname, "images")));
 
+//verify token middleware
+const verifyToken = (req, res, next) => {
+  let token = req.headers["authorization"];
+  if (token) {
+    token = token.split(" ")[1];
+    console.log("verifyToken", token);
+  } else {
+  }
+  console.log("verifyToken", token);
+  next();
+};
+
 //Sign up
 app.post("/signup", async (req, res) => {
   let user = new userData(req.body);
-  let userEmail = await userData.findOne({email: user.email})
-  if(userEmail){
+  let userEmail = await userData.findOne({ email: user.email });
+  if (userEmail) {
     res.status(500).json({ error: "Failed to upload file" });
-  }else{
-    
+  } else {
     let signUpUser = await user.save();
     signUpUser = signUpUser.toObject();
-    
+
     delete signUpUser.password;
-    jwt.sign({signUpUser},jwtKey,{expiresIn:"2hr"},(err, token)=>{
-      if(err){
+    jwt.sign({ signUpUser }, jwtKey, { expiresIn: "2hr" }, (err, token) => {
+      if (err) {
         res.send("something went wrong");
       }
-      res.send({signUpUser, authToken: token});
+      res.send({ signUpUser, authToken: token });
     });
-  
   }
-
-  
 });
 
 //login
@@ -43,19 +51,17 @@ app.post("/login", async (req, res) => {
   if (req.body.password && req.body.email) {
     let user = await userData.findOne(req.body).select("-password");
     if (user) {
-      jwt.sign({user},jwtKey,{expiresIn:"2hr"},(err, token)=>{
-        if(err){
+      jwt.sign({ user }, jwtKey, { expiresIn: "2hr" }, (err, token) => {
+        if (err) {
           res.send("something went wrong");
         }
-        res.send({user, authToken: token});
+        res.send({ user, authToken: token });
       });
-      
     } else {
       res.status(500).json({ error: "Failed to upload file" });
     }
   } else {
     res.status(500).json({ error: "Failed to upload file" });
-  
   }
 });
 
@@ -135,7 +141,7 @@ app.put("/products/:id", async (req, res) => {
 });
 
 //Search Product
-app.get("/search/:key", async (req, res) => {
+app.get("/search/:key", verifyToken, async (req, res) => {
   let result = await productData.find({
     $or: [
       { name: { $regex: req.params.key } },

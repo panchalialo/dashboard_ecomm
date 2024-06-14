@@ -1,48 +1,42 @@
 import React from "react";
 import Products from "./Products";
+import Carousel from 'react-bootstrap/Carousel';
+import banner1 from "../assets/images/banner-1.jpg"
+import banner2 from "../assets/images/banner-2.jpg"
+import banner3 from "../assets/images/banner-3.jpg"
 
-import "../assets/css/banner-style.css"
 
-
-const Home = ({fetchProducts}) => {
-  let squares = [];
-
-  for (let i = 0; i < 20; i++) {
-    squares.push(i);
-  }
-  
-  const generateRandomNum = ({ min, max }) => Math.floor(Math.random() * (max - min + 1) + min);
+const Home = () => {
+ 
 
   return (
     <>
-    <div className="intro">
-      {/* <div className="quote">
-        <h1>{title}</h1>
-        <p>{description}</p>
-      </div> */}
-      <div className="squares-wrapper">
-        <ul className="squares">
-          {squares.map((el, i) => {
-            const randomDimensions = Math.floor(
-              Math.random() * (150 - 15 + 1) + 15
-            );
-
-            return ( 
-              <li
-                key={i}
-                style={{
-									left: `${generateRandomNum({ min: 0, max: 90 })}%`,
-									width: randomDimensions,
-									height: randomDimensions,
-									animationDelay: `${i % 2 ? generateRandomNum({ min: 0, max: 20 }) : 0}s`,
-									animationDuration: `${generateRandomNum({ min: 10, max: 50 })}s`,
-								}}
-              />
-            );
-          })}
-        </ul>
-      </div>
-      <div className="image-overlay" />
+    <div className="dashboard-banner">
+     <Carousel pause="hover" fade="true">
+      <Carousel.Item interval={1000}>
+        <img src={banner1} alt="banner-1" className="banner-img"/>
+        <Carousel.Caption>
+          <h3>First slide label</h3>
+          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+        </Carousel.Caption>
+      </Carousel.Item>
+      <Carousel.Item interval={1000}>
+      <img src={banner2} alt="banner-1" className="banner-img"/>
+        <Carousel.Caption>
+          <h3>Second slide label</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        </Carousel.Caption>
+      </Carousel.Item>
+      <Carousel.Item interval={1000}>
+      <img src={banner1} alt="banner-1" className="banner-img"/>
+        <Carousel.Caption>
+          <h3>Third slide label</h3>
+          <p>
+            Praesent commodo cursus magna, vel scelerisque nisl consectetur.
+          </p>
+        </Carousel.Caption>
+      </Carousel.Item>
+    </Carousel>
     </div>
 
 

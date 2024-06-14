@@ -28,7 +28,7 @@ function App() {
           <Route path="/products" element={<Products />} />
           <Route path="/add-product" element={<AddProduct/>} />
           <Route path="/update-product/:id" element={<EditProduct/>} />
-          <Route path="/profile" element={<Profile />} />
+          {/* <Route path="/profile" element={<Profile />} /> */}
           <Route path='*' exact={true} element={<NotFoundPage/>} />
         </Route>
 
