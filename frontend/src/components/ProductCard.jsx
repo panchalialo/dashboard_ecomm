@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ProductCard = (props) => {
 const navigate = useNavigate()
@@ -23,19 +23,19 @@ const navigate = useNavigate()
   return (
     <>
       <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-        <a href="#">
+        <Link href="#" as={Link} to="*">
           <img
             className="p-8 rounded-t-lg"
             src={props.image}
             alt={props.name}
           />
-        </a>
+        </Link>
         <div className="px-5 pb-3">
-          <a href="#">
+        <Link href="#" as={Link} to="*">
             <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
               {props.name}
             </h5>
-          </a>
+          </Link>
           <h2 className="text-sm font-semibold tracking-tight text-gray-900 dark:text-white">
             {props.brand}
           </h2>

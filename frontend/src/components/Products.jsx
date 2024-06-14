@@ -8,13 +8,13 @@ const Products = () => {
   const [addProductShow, setAddProductShow] = useState(false);
 
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
 
   //render product list on load
   useEffect(() => {
     fetchProducts();
-    if(location.pathname === "/products"){
-      setAddProductShow(true)
+    if (location.pathname === "/products") {
+      setAddProductShow(true);
     }
   }, [setProductList, location.pathname]);
 
@@ -31,56 +31,66 @@ const Products = () => {
     navigate("/add-product");
   };
 
-
   //search product
   const searchInputHandler = async (e) => {
-    let key = e.target.value
+    let key = e.target.value;
     // console.log(e.target.value)
-    if(key){
-    let result = await fetch(`http://localhost:5000/search/${key}`);
-    result = await result.json()
-    if(result){
-      setProductList(result)
-    }}else{
-      fetchProducts()
+    if (key) {
+      let result = await fetch(`http://localhost:5000/search/${key}`);
+      result = await result.json();
+      if (result) {
+        setProductList(result);
+      }
+    } else {
+      fetchProducts();
     }
-  }
-
-
+  };
 
   return (
     <>
       <div className="container my-4">
         <div className=" row page-header my-4 ">
-          <div className="col-md-6 d-flex justify-content-flex-start">
+          <div className="col-md-4 d-flex justify-content-flex-start">
             <h2>All Products</h2>
           </div>
-          <div className="col-md-6 d-flex justify-content-end">
-         { addProductShow ?<> <button
-              type="button"
-              className="btn btn-outline-primary btn-sm"
-              onClick={addProductHandler}
-            >
-              + Add Product
-            </button>
-            <Form.Control
-                    type="search"
-                    placeholder="Search"
-                    className="me-2"
-                    aria-label="Search"
-                    onChange={searchInputHandler}
-                  />
-            </>: <>
-            
-            <Form.Control
-                    type="search"
-                    placeholder="Search"
-                    className="me-2"
-                    aria-label="Search"
-                    onChange={searchInputHandler}
-                  />
-            </>
-            }
+          <div className="col-md-8 d-flex ">
+            {addProductShow ? (
+              <>
+                {" "}
+                
+                  {" "}
+                 
+                  <div className="col-md-8">
+                    <Form.Control
+                      type="search"
+                      placeholder="Search"
+                      className="me-2"
+                      aria-label="Search"
+                      onChange={searchInputHandler}
+                    />
+                  </div>
+                  <div className="col-md-4 d-flex justify-content-end">
+                    <button
+                      type="button"
+                      className="btn btn-outline-primary btn-md"
+                      onClick={addProductHandler}
+                    >
+                      + Add Product
+                    </button>
+                  </div>
+               
+              </>
+            ) : (
+              <>
+                <Form.Control
+                  type="search"
+                  placeholder="Search"
+                  className="me-2"
+                  aria-label="Search"
+                  onChange={searchInputHandler}
+                />
+              </>
+            )}
           </div>
         </div>
 

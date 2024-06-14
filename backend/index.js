@@ -5,6 +5,8 @@ const multer = require("multer");
 const path = require("path");
 const userData = require("./db/usersSchema");
 const productData = require("./db/productsSchema");
+const jwt = require("jsonwebtoken");
+const jwtKey = "e-comm";
 
 const app = express();
 
@@ -15,23 +17,45 @@ app.use("/uploads", express.static(path.join(__dirname, "images")));
 //Sign up
 app.post("/signup", async (req, res) => {
   let user = new userData(req.body);
-  let result = await user.save();
-  result = result.toObject();
-  delete result.password;
-  res.send(result);
+  let userEmail = await userData.findOne({email: user.email})
+  if(userEmail){
+    res.status(500).json({ error: "Failed to upload file" });
+  }else{
+    
+    let signUpUser = await user.save();
+    signUpUser = signUpUser.toObject();
+    
+    delete signUpUser.password;
+    jwt.sign({signUpUser},jwtKey,{expiresIn:"2hr"},(err, token)=>{
+      if(err){
+        res.send("something went wrong");
+      }
+      res.send({signUpUser, authToken: token});
+    });
+  
+  }
+
+  
 });
 
 //login
 app.post("/login", async (req, res) => {
   if (req.body.password && req.body.email) {
-    let user = await userData.findOne(req.body);
+    let user = await userData.findOne(req.body).select("-password");
     if (user) {
-      res.send(user);
+      jwt.sign({user},jwtKey,{expiresIn:"2hr"},(err, token)=>{
+        if(err){
+          res.send("something went wrong");
+        }
+        res.send({user, authToken: token});
+      });
+      
     } else {
-      res.send("user not found");
+      res.status(500).json({ error: "Failed to upload file" });
     }
   } else {
-    res.send("user not found");
+    res.status(500).json({ error: "Failed to upload file" });
+  
   }
 });
 
@@ -113,11 +137,9 @@ app.put("/products/:id", async (req, res) => {
 //Search Product
 app.get("/search/:key", async (req, res) => {
   let result = await productData.find({
-    "$or": [
+    $or: [
       { name: { $regex: req.params.key } },
       { brand: { $regex: req.params.key } },
-      
-
     ],
   });
 

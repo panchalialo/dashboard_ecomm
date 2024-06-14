@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -21,7 +21,7 @@ const NavBar = () => {
 
   return (
     <>
-      <Navbar expand="lg" className="bg-body-tertiary position-fixed top-0 w-100" data-bs-theme="dark" style={{zIndex:"999"}}>
+      <Navbar expand="lg" className="bg-body-tertiary " data-bs-theme="dark" >
         <Container fluid>
           <Navbar.Brand as={Link} to="/" className="text-primary">
             E-Dashboard
