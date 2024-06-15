@@ -1,18 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { json, useNavigate, useParams } from "react-router-dom";
 
-import { useNavigate } from "react-router-dom";
-
-const AddProduct = () => {
+const EditProduct = () => {
   const [inputProductValue, setInputProductValue] = useState({
     name: " ",
     price: " ",
     brand: " ",
     image: null,
   });
-  const [message, setMessage] = useState("");
-  const [errMessage, setErrMessage] = useState(false);
+  const params = useParams();
+
+
+
+//   const [message, setMessage] = useState("");
+//   const [errMessage, setErrMessage] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getProducthandler();
+  }, []);
 
   //input data onchange function
 
@@ -29,46 +36,39 @@ const AddProduct = () => {
     setInputProductValue({ ...inputProductValue, image: e.target.files[0] });
   };
 
-  //product add function
+  //   const objectUrl = URL.createObjectURL(inputProductValue.image)
 
-  const addProducthandler = async (e) => {
+  //   console.log('image', objectUrl)
+
+  //product edit function
+  const getProducthandler = async (e) => {
+    let result = await fetch(`http://localhost:5000/products/${params.id}`);
+    result = await result.json();
+    // console.log(result);
+    setInputProductValue({ ...result, image: result.imageUrl });
+  };
+
+  const updateProducthandler = async (e) => {
     e.preventDefault();
-    if (
-      !inputProductValue.name ||
-      !inputProductValue.price ||
-      !inputProductValue.brand ||
-      !inputProductValue.image
-    ) {
-      setErrMessage(true);
-      return false;
-    } else {
-      const userId = JSON.parse(localStorage.getItem("users"))._id;
-      const data = new FormData();
+    const data = new FormData();
       data.append("file", inputProductValue.image);
       data.append("name", inputProductValue.name);
       data.append("brand", inputProductValue.brand);
       data.append("price", inputProductValue.price);
-      data.append("userId", userId);
-
-      try {
-        const res = await fetch("http://localhost:5000/add-product", {
-          method: "POST",
-          body: data,
-          
-        });
-
-        if (res.ok && data) {
-          setMessage("File Uploaded Successfully");
-          
-          navigate("/products");
-        } else {
-          setMessage("Error: File Upload Failed");
-          setErrMessage(true);
-        }
-      } catch (err) {
-        setMessage("Error: File Upload Failed");
-      }
-    }
+     
+    
+    let result = await fetch(`http://localhost:5000/products/${params.id}`, {
+      method: "put",
+      body: data,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    
+   if(result.ok){
+    console.log(result)
+    navigate("/products")
+   }
   };
 
   return (
@@ -78,9 +78,12 @@ const AddProduct = () => {
 
         <div className="row d-flex justify-content-center align-items-center">
           <div class=" card my-4 col-sm-12 col-lg-8 ">
-            <h5 class="card-header text-primary ">Add Product</h5>
+            <h5 class="card-header text-primary ">Update Product</h5>
             <div class="card-body">
-              <form onSubmit={addProducthandler} encType="multipart/form-data">
+              <form
+                onSubmit={updateProducthandler}
+                encType="multipart/form-data"
+              >
                 <div class="grid gap-6 mb-6 md:grid-cols-2">
                   <div>
                     <label
@@ -97,10 +100,11 @@ const AddProduct = () => {
                       id="first_name"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="name"
+                      required
                     />
-                    {errMessage && inputProductValue.name === " " && (
+                    {/* {errMessage && inputProductValue.name === " " && (
                       <span className="text-danger">Please enter name</span>
-                    )}
+                    )} */}
                   </div>
 
                   <div>
@@ -120,9 +124,9 @@ const AddProduct = () => {
                       value={inputProductValue.price}
                       onChange={getProductInput}
                     />
-                    {errMessage && inputProductValue.price === " " && (
+                    {/* {errMessage && inputProductValue.price === " " && (
                       <span className="text-danger">Please enter price</span>
-                    )}
+                    )} */}
                   </div>
                   <div>
                     <label
@@ -140,9 +144,9 @@ const AddProduct = () => {
                       value={inputProductValue.brand}
                       onChange={getProductInput}
                     />
-                    {errMessage && inputProductValue.brand === " " && (
+                    {/* {errMessage && inputProductValue.brand === " " && (
                       <span className="text-danger">Please enter brand</span>
-                    )}
+                    )} */}
                   </div>
                 </div>
                 <div class="mb-6">
@@ -160,20 +164,26 @@ const AddProduct = () => {
                     name="image"
                     onChange={getImageHandler}
                   />
-                  {errMessage && inputProductValue.image === null && (
+                  {/* {selectedFile &&  <img src={preview}  alt=""/> } */}
+                  <img
+                    src={inputProductValue?.image}
+                    alt=""
+                    className="update-img"
+                  />
+                  {/* {errMessage && inputProductValue.image === null && (
                     <span className="text-danger">Please upload file</span>
-                  )}
+                  )} */}
                 </div>
 
                 <button
                   type="submit"
                   class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >
-                  Submit
+                  Update
                 </button>
               </form>
 
-              {message && <p>{message}</p>}
+              {/* {message && <p>{message}</p>} */}
             </div>
           </div>
         </div>
@@ -182,4 +192,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default EditProduct;

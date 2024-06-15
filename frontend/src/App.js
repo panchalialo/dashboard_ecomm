@@ -12,6 +12,9 @@ import Profile from "./components/Profile";
 import PrivateComponent from "./components/PrivateComponent";
 import LogIn from "./components/LogIn";
 import AddProduct from "./components/AddProduct";
+import "./index.css"
+import EditProduct from "./components/EditProduct";
+import NotFoundPage from "./components/404Page";
 
 function App() {
   return (
@@ -24,8 +27,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
           <Route path="/add-product" element={<AddProduct/>} />
-          <Route path="/update-product" element={<Products />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/update-product/:id" element={<EditProduct/>} />
+          {/* <Route path="/profile" element={<Profile />} /> */}
+          <Route path='*' exact={true} element={<NotFoundPage/>} />
         </Route>
 
         {/*................... Public routes.................. */}

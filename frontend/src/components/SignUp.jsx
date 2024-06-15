@@ -21,17 +21,19 @@ const SignUp = () => {
     password: "",
     password2: "",
   });
-
-  useEffect(()=>{
+  const [message, setMessage] = useState("");
+  useEffect(() => {
     const auth = localStorage.getItem("users");
-    if(auth){
-      navigate("/")
+    if (auth) {
+      navigate("/");
     }
-
-  })
+  });
 
   const getInputValue = (e) => {
-    setInputSignupValue({ ...inputSignupValue, [e.target.name]: e.target.value });
+    setInputSignupValue({
+      ...inputSignupValue,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const registerHandler = async (e) => {
@@ -43,11 +45,14 @@ const SignUp = () => {
       },
     });
     result = await result.json();
-    console.log(result);
-    localStorage.setItem("users", JSON.stringify(result));
-    setInputSignupValue({ name: "", email: "", password: "", password2: "" });
-    if (result) {
+
+    if (result.authToken) {
+      localStorage.setItem("users", JSON.stringify(result.signUpUser));
+      localStorage.setItem("token", JSON.stringify(result.authToken));
+      setInputSignupValue({ name: "", email: "", password: "", password2: "" });
       navigate("/");
+    } else {
+      setMessage("Error: Email already exist please use another email");
     }
   };
 
@@ -114,6 +119,7 @@ const SignUp = () => {
                     onChange={getInputValue}
                   />
                 </div>
+                {message && <p className="text-danger">{message}</p>}
 
                 {/* <div className="mb-4">
                   <MDBCheckbox

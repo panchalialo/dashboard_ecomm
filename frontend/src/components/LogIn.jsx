@@ -13,28 +13,27 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const LogIn = () => {
- 
   const [inputLoginValue, setInputLoginValue] = useState({
     email: "",
     password: "",
   });
+  const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
 
-  useEffect(()=>{
+  useEffect(() => {
     const auth = localStorage.getItem("users");
-    if(auth){
-      navigate("/")
+    if (auth) {
+      navigate("/");
     }
-
-  })
+  });
 
   const getLoginInputValue = (e) => {
     setInputLoginValue({ ...inputLoginValue, [e.target.name]: e.target.value });
   };
 
   const loginHandler = async () => {
-    console.log(inputLoginValue);
+   
     let result = await fetch("http://localhost:5000/login", {
       method: "post",
       body: JSON.stringify(inputLoginValue),
@@ -45,19 +44,18 @@ const LogIn = () => {
 
     result = await result.json();
 
-    if (result.email) {
-        
-      
-      localStorage.setItem("users", JSON.stringify(result));
+    if (result.authToken ) {
+      localStorage.setItem("users", JSON.stringify(result.user));
+      localStorage.setItem("token", JSON.stringify(result.authToken));
       navigate("/");
     } else {
-      alert("wrong details entered");
+      setMessage("Error: Wrong email or password");
+     
     }
   };
 
   return (
     <>
- 
       <MDBContainer fluid>
         <MDBCard className="text-black m-5" style={{ borderRadius: "25px" }}>
           <MDBCardBody>
@@ -94,12 +92,12 @@ const LogIn = () => {
                     onChange={getLoginInputValue}
                   />
                 </div>
-
+                {message && <p className="text-danger">{message}</p>}
                 <MDBBtn className="mb-4" size="lg" onClick={loginHandler}>
                   Log In
                 </MDBBtn>
               </MDBCol>
-
+              {message && <p>{message}</p>}
               <MDBCol
                 md="10"
                 lg="6"

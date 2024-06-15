@@ -1,5 +1,6 @@
 body{
   width: 100%;
+  
 }
 
 /* .App {
@@ -52,3 +53,45 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+.update-img{
+  width: 100px;
+}
+
+.section-main-banner {
+  background-color: aqua;
+  height: 300px;
+  width: 100%;
+  background-image: url('../src/assets/images/banner-1.jpg');
+}
+
+
+/* 404 page */
+.not-found-page-div {
+height: 90vh;
+color: rgb(94, 94, 94);
+background: rgb(243, 243, 243);
+}
+.not-found-page-div h1 {
+  font-size: 100px;
+  line-height: 100px;
+  color: rgb(146, 6, 6);
+  }
+  .not-found-page-div h2 {
+    font-size: 75px;
+    text-transform: capitalize;
+    }
+
+
+/* dashboard banner ..................*/
+  .dashboard-banner .carousel-control-prev{
+    display: none;
+  }
+  .dashboard-banner .carousel-control-next{
+    display: none;
+  }
+
+  .dashboard-banner .banner-img{
+    filter: brightness(0.5);
+  }
+  
