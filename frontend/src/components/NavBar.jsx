@@ -49,7 +49,7 @@ const NavBar = () => {
                   </Button> */}
                   <div className="text-white py-2 px-1">
                     <svg
-                      class="w-6 h-6 text-gray-800 text-gray-400 -2"
+                      class="w-6 h-6 text-gray-400 "
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
